@@ -13,7 +13,7 @@ LED_B = 24
 SERVO = 23
 
 
-class SpotLightManager:
+class SpotLightPWMManager:
 
     def __init__(self):
         GPIO.setmode(GPIO.BCM)
@@ -69,7 +69,7 @@ class SpotLightManager:
         if angle > 150:
             self.turn_on_red()
         elif angle > 125:
-            self.turn_on_red()
+            self.turn_on_green()
         elif angle >100:
             self.turn_on_blue()
         elif angle > 75:
@@ -87,20 +87,20 @@ class SpotLightManager:
     def servo_control_color(self):
         for angle in range(181):
             self.pwm_servo.ChangeDutyCycle(2.5 + 10 * angle/180)
+            print(angle)
             self.corlor_light(angle)
             time.sleep(0.009)
 
         for angle in reversed(range(181)):
             self.pwm_servo.ChangeDutyCycle(2.5 + 10 * angle/180)
+            print(angle)
             self.corlor_light(angle)
             time.sleep(0.009)
-
-        time.sleep(2)
 
 
 if __name__ == "__main__":
     try:
-        spot_light_manager = SpotLightManager()
+        spot_light_manager = SpotLightPWMManager()
         spot_light_manager.pwm_servo.ChangeDutyCycle(2.5 + 10 * 90/180)
 
         while True:
@@ -108,6 +108,5 @@ if __name__ == "__main__":
 
     except KeyboardInterrupt:
         pass
-
-    spot_light_manager.pwm_servo.stop()
-    GPIO.cleanup()
+        spot_light_manager.pwm_servo.stop()
+        GPIO.cleanup()
