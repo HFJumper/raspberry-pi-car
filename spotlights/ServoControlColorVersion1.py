@@ -14,10 +14,10 @@ SERVO = 23
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
+global pwm_servo
 
 # init output mode
 def init():
-    global pwm_servo
     GPIO.setup(LED_R, GPIO.OUT)
     GPIO.setup(LED_G, GPIO.OUT)
     GPIO.setup(LED_B, GPIO.OUT)
@@ -27,13 +27,13 @@ def init():
     pwm_servo = GPIO.PWM(SERVO, 50)
     pwm_servo.start(0)
 
-	
+
 # change color based on angle
 
 def turn_on_red():
     GPIO.output(LED_R, GPIO.HIGH)
-	GPIO.output(LED_G, GPIO.LOW)
-	GPIO.output(LED_B, GPIO.LOW)
+    GPIO.output(LED_G, GPIO.LOW)
+    GPIO.output(LED_B, GPIO.LOW)
 
 def turn_on_green():
     GPIO.output(LED_R, GPIO.LOW)
@@ -42,35 +42,34 @@ def turn_on_green():
 
 def turn_on_blue():
     GPIO.output(LED_R, GPIO.LOW)
-	GPIO.output(LED_G, GPIO.LOW)
-	GPIO.output(LED_B, GPIO.HIGH)
+    GPIO.output(LED_G, GPIO.LOW)
+    GPIO.output(LED_B, GPIO.HIGH)
 
 
 def turn_on_red_green():
-	GPIO.output(LED_R, GPIO.HIGH)
-	GPIO.output(LED_G, GPIO.HIGH)
-	GPIO.output(LED_B, GPIO.LOW)
+    GPIO.output(LED_R, GPIO.HIGH)
+    GPIO.output(LED_G, GPIO.HIGH)
+    GPIO.output(LED_B, GPIO.LOW)
 
 def turn_on_green_blue():
-	GPIO.output(LED_R, GPIO.LOW)
-	GPIO.output(LED_G, GPIO.HIGH)
-	GPIO.output(LED_B, GPIO.HIGH)
+    GPIO.output(LED_R, GPIO.LOW)
+    GPIO.output(LED_G, GPIO.HIGH)
+    GPIO.output(LED_B, GPIO.HIGH)
 
 def turn_on_red_blue():
     GPIO.output(LED_R, GPIO.HIGH)
-	GPIO.output(LED_G, GPIO.LOW)
-	GPIO.output(LED_B, GPIO.HIGH)
+    GPIO.output(LED_G, GPIO.LOW)
+    GPIO.output(LED_B, GPIO.HIGH)
 
 def turn_on_red_green_blue():
     GPIO.output(LED_R, GPIO.HIGH)
-	GPIO.output(LED_G, GPIO.HIGH)
-	GPIO.output(LED_B, GPIO.HIGH)
+    GPIO.output(LED_G, GPIO.HIGH)
+    GPIO.output(LED_B, GPIO.HIGH)
 
 def turn_off_red_green_blue():
     GPIO.output(LED_R, GPIO.LOW)
-	GPIO.output(LED_G, GPIO.LOW)
-	GPIO.output(LED_B, GPIO.LOW)
-
+    GPIO.output(LED_G, GPIO.LOW)
+    GPIO.output(LED_B, GPIO.LOW)
 
 
 def corlor_light(angle):
@@ -90,30 +89,32 @@ def corlor_light(angle):
         turn_on_red_green_blue()
     else :
         turn_off_red_green_blue()
-		
+
 # servo turning
 def servo_control_color():
     for angle in range(181):
         pwm_servo.ChangeDutyCycle(2.5 + 10 * angle/180)
         corlor_light(angle)
-	    time.sleep(0.009) 
-    
+        time.sleep(0.009)
+
     for angle in reversed(range(181)):
         pwm_servo.ChangeDutyCycle(2.5 + 10 * angle/180)
-	    corlor_light(angle)
-	    time.sleep(0.009)
+        corlor_light(angle)
+        time.sleep(0.009)
 
     time.sleep(2)
 
 
-try:
-    init()
-    # init to move forward
-    pwm_servo.ChangeDutyCycle(2.5 + 10 * 90/180)
-    while True:
- 	servo_control_color()
-		
-except KeyboardInterrupt:
-    pass
-pwm_servo.stop()
-GPIO.cleanup()
+if __name__ == "__main__":
+    try:
+        init()
+        # init to move forward
+        pwm_servo.ChangeDutyCycle(2.5 + 10 * 90/180)
+        while True:
+            servo_control_color()
+
+    except KeyboardInterrupt:
+        pass
+
+    pwm_servo.stop()
+    GPIO.cleanup()
